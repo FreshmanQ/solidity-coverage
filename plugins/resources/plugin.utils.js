@@ -94,7 +94,9 @@ function toRelativePath(pathToFile, pathToParent){
  */
 function getTempLocations(config){
   const cwd = config.workingDir;
-  const contractsDirName = '.coverage_contracts';
+  // @xunan: use non-hidden folder to allow compiling vyper contracts
+  //         seems to be a truffle bug
+  const contractsDirName = 'coverage_contracts';
   const artifactsDirName = config.temp || '.coverage_artifacts';
 
   return {
@@ -131,7 +133,7 @@ function checkContext(config, tempContractsDir, tempArtifactsDir){
 // =============================
 
 function assembleFiles(config, skipFiles=[]){
-  const targetsPath = path.join(config.contractsDir, '**', '*.sol');
+  const targetsPath = path.join(config.contractsDir, '**', '{*.sol,*.vy}');
   const targets = shell.ls(targetsPath).map(path.normalize);
 
   skipFiles = assembleSkipped(config, targets, skipFiles);
